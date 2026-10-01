@@ -1,21 +1,88 @@
 // use prisma-8
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String?
-  name      String?
-  posts     Post[]
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.updatedAtString()
+enum Cursos {
+  INFORMÁTICA
+  MINERAÇÃO
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.updatedAtString()
+enum Turnos {
+  MATUTINO
+  VESPERTINO
+}
+
+model Eventos {
+  id Int @id @default(autoincrement())
+  nome String
+  data DateTime
+}
+
+model Moderador {
+  id Int @id @default(autoincrement())
+  login String @unique
+  senha String
+}
+
+model Modalidades {
+  id Int @id @default(autoincrement())
+  nome String
+  pontos Int
+  jogosIndividuais JogosIndividuais[] @relation("ModalidadeIndividual")
+  jogosColetivos JogosColetivos[] @relation("ModalidadeColetiva")
+}
+
+model Turmas {
+  id Int @id @default(autoincrement())
+  nome String
+  turno Turnos @default(MATUTINO)
+  serie Int
+  curso Cursos
+  participante Participantes[]
+
+  JogosTurma1 JogosColetivos[] @relation("Turma01")
+  JogosTurma2 JogosColetivos[] @relation("Turma02")
+  vitorias JogosColetivos[] @relation("TurmaGanhadora")
+}
+
+model Participantes {
+  id Int @id @default(autoincrement())
+  nome String 
+  turmaId Int
+  turma Turmas @relation(fields: [turmaId], references: [id])
+  jogos01 JogosIndividuais[] @relation("Participante01") 
+  jogos02 JogosIndividuais[] @relation("Participante02") 
+  vitorias JogosIndividuais[] @relation("Ganhador")
+}
+
+model JogosIndividuais {
+  id Int @id @default(autoincrement())
+  modalidadeId Int
+  modalidade Modalidades @relation("ModalidadeIndividual", fields: [modalidadeId], references: [id])
+
+  id_participante_01 Int
+  participante01 Participantes @relation("Participante01", fields: [id_participante_01], references: [id])
+
+  id_participante_02 Int
+  participante02 Participantes @relation("Participante02", fields: [id_participante_02], references: [id])
+
+  id_ganhador Int?
+  ganhador Participantes? @relation("Ganhador", fields: [id_ganhador], references: [id])
+  
+  data DateTime
+}
+
+model JogosColetivos {
+  id Int @id @default(autoincrement())
+  modalidadeId Int
+  modalidade Modalidades @relation("ModalidadeColetiva", fields: [modalidadeId], references: [id])
+
+  id_turma_01 Int
+  turma_01 Turmas @relation("Turma01", fields: [id_turma_01], references: [id])
+
+  id_turma_02 Int
+  turma_02 Turmas @relation("Turma02", fields: [id_turma_02], references: [id])
+
+  id_ganhador Int?
+  ganhador Turmas? @relation("TurmaGanhadora", fields: [id_ganhador], references: [id])
+
+  date DateTime
 }
