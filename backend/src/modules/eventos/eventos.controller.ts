@@ -7,27 +7,27 @@ export class EventosController {
   constructor(private readonly eventosService: EventosService) {}
 
   @Post()
-  criar(@Body() data: CreateEventoDTO) {
+  create(@Body() data: CreateEventoDTO) {
     return this.eventosService.create(data);
   }
 
   @Get()
-  listar() {
+  list() {
     return this.eventosService.list();
   }
 
   @Get(':id')
-  buscarPorId(@Param('id', ParseIntPipe) id: number) {
+  findById(@Param('id', ParseIntPipe) id: number) {
     return this.eventosService.findById(id);
   }
 
   @Patch(':id')
-  atualizar(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateEventoDTO,) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateEventoDTO,) {
     return this.eventosService.update(id, data);
   }
 
   @Delete(':id')
-  remover(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id', ParseIntPipe) id: number) {
     return this.eventosService.delete(id);
   }
 }

@@ -13,7 +13,7 @@ enum Turnos {
 model Eventos {
   id Int @id @default(autoincrement())
   nome String
-  data DateTime
+  data String
 }
 
 model Moderador {
@@ -67,7 +67,7 @@ model JogosIndividuais {
   id_ganhador Int?
   ganhador Participantes? @relation("Ganhador", fields: [id_ganhador], references: [id])
   
-  data DateTime
+  data String
 }
 
 model JogosColetivos {
@@ -84,5 +84,5 @@ model JogosColetivos {
   id_ganhador Int?
   ganhador Turmas? @relation("TurmaGanhadora", fields: [id_ganhador], references: [id])
 
-  date DateTime
+  date String
 }
